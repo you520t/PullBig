@@ -9,6 +9,6 @@
 * 手动导入：
     将UIScrollView+PullBig分类导入工程
 
-##note
-*[scrollView setBigView:image withHeaderView:nil]; 有背景图片 没有头部view
-*[scrollView setBigView:image withHeaderView:[UIView new]]; 有背景图片 有头部view,头部view控件不会放大 显示高度以头部view高度为准
+## 说明
+* [scrollView setBigView:image withHeaderView:nil]; 有背景图片 没有头部view
+* [scrollView setBigView:image withHeaderView:[UIView new]]; 有背景图片 有头部view,头部view控件不会放大 显示高度以头部view高度为准
