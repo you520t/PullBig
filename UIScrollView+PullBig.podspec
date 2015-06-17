@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "UIScrollView+PullBig"
-  s.version      = "1.0.0"
+  s.version      = "1.0.1"
   s.summary      = “pull big with ScrollView.”
   s.homepage     = "https://github.com/you520t/PullBig"
   s.license      = 'MIT'
