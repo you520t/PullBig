@@ -2,7 +2,7 @@
 头部背景图片下拉放大
 
 ## 支持控件
-* `UIScrollView`、`UITableView`
+* `UIScrollView`、`UITableView`、`UICollectionView`
 
 ## 如何使用
 * cocoapods导入：`pod 'UIScrollView+PullBig'`
