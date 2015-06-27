@@ -10,7 +10,7 @@
 #import <objc/runtime.h>
 @interface PullBigEffectView:UIView
 @property (nonatomic, assign) UIEdgeInsets contentInset;
-@property (nonatomic, assign) BOOL isLayoutSubviews;
+@property (nonatomic, assign, getter=isfirstLayoutSubviews) BOOL firstLayoutSubviews;
 @property (nonatomic, assign) CGFloat headerH;
 @end
 NSString *const ContentOffset = @"contentOffset";
@@ -27,17 +27,29 @@ NSString *const ContentOffset = @"contentOffset";
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    self.contentInset = [(UIScrollView *)self.superview contentInset];
-    UIView *headerView = [self.superview valueForKey:@"headerView"];
-    UIView *bigView = [self.superview valueForKey:@"bigView"];
-    self.frame = headerView ? headerView.bounds : bigView.bounds;
-    self.headerH = headerView ? headerView.bounds.size.height : bigView.bounds.size.height;
-    self.isLayoutSubviews = true;
+    if ([self isfirstLayoutSubviews]) {
+        UIScrollView *superView = (UIScrollView *)self.superview;
+        UIView *headerView = superView.headerView;
+        UIView *bigView =superView.bigView;
+        self.frame = headerView ? headerView.bounds : bigView.bounds;
+        self.headerH = headerView ? headerView.bounds.size.height : bigView.bounds.size.height;
+        CGRect selfFrame = self.frame;
+        selfFrame.origin.y = -self.headerH;
+        self.frame = selfFrame;
+        superView.contentInset = UIEdgeInsetsMake(superView.contentInset.top+self.headerH, 0, 0, 0);
+        CGRect headerViewFrame = headerView.frame;
+        headerViewFrame.origin.y = -self.headerH;
+        headerView.frame = headerViewFrame;
+        
+        self.contentInset = superView.contentInset;
+        [superView setContentOffset:CGPointMake(0, -self.contentInset.top) animated:NO];
+        self.firstLayoutSubviews = false;
+    }
 }
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    if ([keyPath isEqualToString:ContentOffset] && self.isLayoutSubviews) {
+    if ([keyPath isEqualToString:ContentOffset] && !self.isfirstLayoutSubviews) {
         [self animationHandle:[[object valueForKey:ContentOffset] CGPointValue]];
     }
 }
@@ -102,17 +114,9 @@ static char headerViewKey;
 {
     PullBigEffectView *effectView = [[PullBigEffectView alloc] init];
     effectView.layer.masksToBounds = YES;
+    effectView.firstLayoutSubviews = YES;
     [effectView addSubview:self.bigView];
     [self insertSubview:effectView atIndex:0];
-    
-    if ([self isKindOfClass:[UITableView class]])
-    {
-        UITableView *table = (UITableView *)self;
-        table.tableHeaderView = self.headerView;
-    }
-    else if ([self isKindOfClass:[UIScrollView class]])
-    {
-        [self insertSubview:self.headerView belowSubview:self.bigView];
-    }
+    [self insertSubview:self.headerView aboveSubview:effectView];
 }
 @end

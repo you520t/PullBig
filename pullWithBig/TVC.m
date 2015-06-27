@@ -24,7 +24,12 @@ static NSString *cellid =@"id";
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:cellid];
     UIImageView *image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"1.jpg"]];
-    [self.tableView setBigView:image withHeaderView:[[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 200)]];
+    UIView *header = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 200)];
+    UIButton *btn = [UIButton buttonWithType:UIButtonTypeSystem];
+    [btn setTitle:@"header控件" forState:UIControlStateNormal];
+    btn.frame = CGRectMake(0, 100, 100, 100);
+    [header addSubview:btn];
+    [self.tableView setBigView:image withHeaderView:header];
 
 }
 

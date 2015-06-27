@@ -8,5 +8,7 @@
 
 #import <UIKit/UIKit.h>
 @interface UIScrollView (PullBig)
+@property (nonatomic, strong) UIView *bigView;
+@property (nonatomic, strong) UIView *headerView;
 -(void)setBigView:(UIView *)bigView withHeaderView:(UIView *)headerView;
 @end
